@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import Home from "./Pages/Home"
 import IdentifyShortestPath from "./Pages/IdentifyShortestPath"
 import Error from "./Pages/Error"
-import './App.css';
+import './Assets/Styles/App.css';
 
 function App() {
 
