@@ -14,25 +14,15 @@ function App() {
 
         <Routes>
 
+          <Route path="/" element={<Home />} />
 
+          <Route path="/identify_shortest_path" element={<IdentifyShortestPath />} />
 
-          <Route  path="/" element={<Home/>} />
-
-          <Route path="/identify_shortest_path" element={<IdentifyShortestPath/>} />
-
-
-
-
-          <Route component={Error} />
-
-
+          <Route path="*" element={<Error />} />
 
         </Routes>
 
       </Router>
-
-     
-
     </div>
   );
 }
