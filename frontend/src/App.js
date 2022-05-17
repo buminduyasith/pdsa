@@ -1,14 +1,38 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ShortestPathGraph from './Components/ShortestPathGraph';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Home from "./Pages/Home"
+import IdentifyShortestPath from "./Pages/IdentifyShortestPath"
+import Error from "./Pages/Error"
 import './App.css';
 
 function App() {
-  
+
   return (
     <div className="App">
 
-      <ShortestPathGraph />
-      
+      <Router>
+
+
+        <Routes>
+
+
+
+          <Route  path="/" element={<Home/>} />
+
+          <Route path="/identify_shortest_path" element={<IdentifyShortestPath/>} />
+
+
+
+
+          <Route component={Error} />
+
+
+
+        </Routes>
+
+      </Router>
+
+     
+
     </div>
   );
 }
