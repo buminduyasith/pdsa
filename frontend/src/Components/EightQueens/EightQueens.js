@@ -1,7 +1,3 @@
-/**
- * Eight Queens chess game
- */
-
 import './EightQueens.css';
 import * as attack from './UnderAttack.js';
 import * as helpers from './helpers.js';
@@ -47,6 +43,8 @@ class EightQueens extends Component {
             }
             position[[square]] = 'wQ'; // Clicked on an empty square, add a Queen
         }
+
+        console.log(position);
 
         const attacked = attack.underAttack(position); // get array of Queens under attack
 
@@ -131,7 +129,8 @@ class EightQueens extends Component {
                     key={fenPosition}
                     sparePieces={false}
                     draggable={false}
-                    calcWidth={({screenWidth}) => (screenWidth < 500 ? 350 : 480)}
+                    showNotation={true}
+                    calcWidth={({screenWidth}) => (screenWidth < 500 ? 350 : 600)}
                     onSquareClick={this.onSquareClick}
                     squareStyles={squareStyles}
                     pieces={{
@@ -160,7 +159,7 @@ class EightQueens extends Component {
                         {showAttackPathsText} attack paths
                     </button>
                     <button className="EightQueens-restart">
-                        <a href="." >Restart</a>
+                        <a href="./eight_queens" >Restart</a>
                     </button>
                 </div>
             </div>
