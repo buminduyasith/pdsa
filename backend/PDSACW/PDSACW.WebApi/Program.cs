@@ -2,6 +2,7 @@ using PDSACW.Application;
 using PDSACW.Application.Common.Interfaces;
 using PDSACW.Infrastructure;
 using PDSACW.Infrastructure.Persistence;
+using wedeliver.webapi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
 app.MapControllers();
 
