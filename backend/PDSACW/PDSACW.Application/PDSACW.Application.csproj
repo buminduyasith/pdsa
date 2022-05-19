@@ -19,4 +19,8 @@
 	  <ProjectReference Include="..\PDSACW.Domain\PDSACW.Domain.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Features\IdentifyShortestPath\Commands\" />
+	</ItemGroup>
+
 </Project>
