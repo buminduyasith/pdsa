@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
+import axios from 'axios';
 
 const allSolutions = {
     "s1":{a8:"wQ", b2:"wQ",c4:"wQ",d1:"wQ",e7:"wQ",f5:"wQ",g3:"wQ",h6:"wQ"},
@@ -42,9 +43,56 @@ class Status extends Component {
             alert('The Name Cannot be Empty!');
             event.preventDefault();
         }else {
-            alert('A name was submitted: ' + this.state.value);
             event.preventDefault();
+            let noOFRecords = 0;
+
+            axios.get('https://localhost:7218/api/EightQueens/EightQueens')
+            .then(res => {
+                noOFRecords = res.length;
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+
+            if(noOFRecords === 12){
+                alert('All Soulutions have been found please Restart');
+            } else {
+                
+                let exixtingSolution = false;
+
+                axios.get('https://localhost:7218/api/EightQueens/EightQueens')
+                .then(res => {
+                    res.data.solution.forEach(element => {
+                        if (deepEqual(this.state.crrposition,element) == true){
+                            exixtingSolution = true;
+                        }else{
+                            exixtingSolution = false;
+                            alert('Soulution already exists. Please Try Again');
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+
+                if(exixtingSolution === false) {
+                const userSolution = {
+                    name: this.state.value,
+                    solution: this.state.crrposition
+                };
+                axios.post('https://localhost:7218/api/EightQueens/EightQueens', userSolution)
+                    .then((res) => {
+                        alert('Your Solution was Submitted');
+                    }).catch((error) => {
+                        alert('An Error Ocurred please Try Again later!');
+                    });
+                this.setState({ name: '', crrposition: '' })
+                }else{
+                    alert('An Error Ocurred please Try Again later!');
+                }
+            }
         }
+
       }
     
     render() {
