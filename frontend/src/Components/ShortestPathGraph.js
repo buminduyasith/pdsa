@@ -40,7 +40,7 @@ function ShortestPathGraph() {
 
 
 
-    const tempStartNode = nodes[Math.floor((Math.random() * nodes.length))]
+    const tempStartNode = "B" //nodes[Math.floor((Math.random() * nodes.length))]
     setStartNode(tempStartNode)
 
     const allinputsData = [
@@ -60,16 +60,28 @@ function ShortestPathGraph() {
       return value != tempStartNode;
     }));
 
+    // var basicGraph = [
+    //   { start: "A", finish: "B", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+    //   { start: "A", finish: "C", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+    //   { start: "B", finish: "F", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+    //   { start: "B", finish: "D", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+    //   { start: "C", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+    //   { start: "F", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+    //   { start: "D", finish: "F", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+    //   { start: "D", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) }
+    // ];
+
     var basicGraph = [
-      { start: "A", finish: "B", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-      { start: "A", finish: "C", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-      { start: "B", finish: "F", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-      { start: "B", finish: "D", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-      { start: "C", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-      { start: "F", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-      { start: "D", finish: "F", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-      { start: "D", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) }
-    ];
+      { start: "A", finish: "B", distance: 10 },
+      { start: "A", finish: "C", distance: 15 },
+      { start: "B", finish: "F", distance: 15 },
+      { start: "B", finish: "D", distance: 12 },
+      { start: "C", finish: "E", distance: 10 },
+      { start: "F", finish: "E", distance: 5 },
+      { start: "D", finish: "F", distance: 1 },
+      { start: "D", finish: "E", distance: 2 }
+  ];
+  
 
     setGraphData(basicGraph)
 
@@ -196,27 +208,32 @@ function ShortestPathGraph() {
   const submit = (e) => {
     e.preventDefault();
 
+    var result = false;
     var graph = readyGraph(graphData);
-    var start = startNode;
+    var start ="B" //startNode;
     var finish = "E";
   
     var shortestPath = solve(graph, start, finish);
 
+
+    console.log(shortestPath);
+    console.log("console.log(formFields);");
+    console.log(formFields);
     nodes.forEach(element => {
       var answerOfShortestPath =  shortestPath.results[element]
       var userinput = formFields.filter(item=> item.startNode===start && item.endNode === element);
-      var userinputSPath = userinput[0].shortestPath
+      var userinputSPath = userinput[0]?.shortestPath
 
-      console.log(JSON.stringify(userinputSPath))
+      //console.log(JSON.stringify(userinputSPath))
      // console.log(JSON.stringify(answerOfShortestPath))
       if(JSON.stringify(answerOfShortestPath) === JSON.stringify(userinputSPath.split(","))){
-        //setAnswerCorrect(true);
+        result = true;
       }
       else{
-        //setAnswerCorrect(false);
+        result = false;
       }
       
-      var result = false;
+   
       if(result){
         Swal.fire({
           icon: 'success',

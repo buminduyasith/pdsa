@@ -3,28 +3,30 @@ using Microsoft.AspNetCore.Mvc;
 using PDSACW.Application.Features.IdentifyShortestPath.Queries;
 using PDSACW.Application.Features.Common.Commands;
 using PDSACW.Application.ViewModels;
+using PDSACW.Application.Features.Common.Query;
 
 namespace PDSACW.WebApi.Controllers
 {
     public class GameController : BaseApiController
     {
-        [HttpGet("shortestPath", Name = "shortestPathTest")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<UserVM>>> Test()
-        {
-            var result = await Mediator.Send(new GetAllUsersQuery());
-            return Ok(result);
-        }
-
-        [HttpPost("register/user", Name = "CreateUser")]
+        
+        [HttpPost("signup", Name = "CreateUser")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<OkObjectResult> CreateUser([FromBody] CreateUserCommand command)
         {
 
             return Ok( await Mediator.Send(command));
+
+        }
+
+        [HttpPost("signupin", Name = "UserLogin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<OkObjectResult> Login([FromBody] SigninUserQuery  query)
+        {
+
+            return Ok(await Mediator.Send(query));
 
         }
 

@@ -11,6 +11,8 @@ namespace PDSACW.Application.Features.Common.Commands
     public class CreateUserCommand : IRequest<UserVM>
     {
         public string UserName { get; set; }
+        public string Password { get; set; }
+
     }
 
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserVM>
@@ -29,6 +31,7 @@ namespace PDSACW.Application.Features.Common.Commands
             var user = new User();
 
             user.UserName = request.UserName;
+            user.Password = request.Password;
 
             _context.Users.Add(user);
 
