@@ -35,7 +35,13 @@ namespace wedeliver.webapi.Middlewares
 
                 switch (error)
                 {
-                    
+                    case InvalidUserException e:
+                        //response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
+                        response.StatusCode = (int)HttpStatusCode.Forbidden;
+                        responseModel.Errors = new List<ErrorModel> { new ErrorModel { ErrorMessage = e.Message } };
+                        break;
+
+
                     case ValidationException e:
                         // custom application error
                         //response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;

@@ -40,7 +40,7 @@ function ShortestPathGraph() {
 
 
 
-    const tempStartNode = nodes[Math.floor((Math.random() * nodes.length))]
+    const tempStartNode = "B" //nodes[Math.floor((Math.random() * nodes.length))]
     setStartNode(tempStartNode)
 
     const allinputsData = [
@@ -210,17 +210,21 @@ function ShortestPathGraph() {
 
     var result = false;
     var graph = readyGraph(graphData);
-    var start = startNode;
+    var start ="B" //startNode;
     var finish = "E";
   
     var shortestPath = solve(graph, start, finish);
 
+
+    console.log(shortestPath);
+    console.log("console.log(formFields);");
+    console.log(formFields);
     nodes.forEach(element => {
       var answerOfShortestPath =  shortestPath.results[element]
       var userinput = formFields.filter(item=> item.startNode===start && item.endNode === element);
-      var userinputSPath = userinput[0].shortestPath
+      var userinputSPath = userinput[0]?.shortestPath
 
-      console.log(JSON.stringify(userinputSPath))
+      //console.log(JSON.stringify(userinputSPath))
      // console.log(JSON.stringify(answerOfShortestPath))
       if(JSON.stringify(answerOfShortestPath) === JSON.stringify(userinputSPath.split(","))){
         result = true;

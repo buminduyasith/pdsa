@@ -6,9 +6,10 @@ import shortestPathimage from "../Assets/Images/shortestPathCover.gif";
 import axios from 'axios'
 function IdentifyShortestPath() {
 
-  const [isGameStart, setGameStart] = useState(false)
+  const [isGameStart, setGameStart] = useState(true)
   const [userName, setUserName] = useState("")
   const [roundCount, setRoundCount] = useState(1)
+  const [userDetail, setuserDetail] = useState({})
 
   const startGame = async () => {
 
@@ -19,38 +20,58 @@ function IdentifyShortestPath() {
     // })
     var userGameName = "";
 
-    Swal.fire({
+    const { value: username } = await Swal.fire({
       title: 'Identify shortest path',
-      input: 'text',
-      inputAttributes: {
-        autocapitalize: 'off'
-      },
-      showCancelButton: true,
-      confirmButtonText: 'Start',
-      showLoaderOnConfirm: true,
-      inputPlaceholder: "Please Enter Your Name",
-
-
-      preConfirm: (userName) => {
-        return   axios.post(`Game/register/user`, { userName })
-          .then(response => {
-            console.log(response)
-            setUserName(userName);
-            return response
-          })
-          .catch(error => {
-            console.log(error)
-            Swal.showValidationMessage(
-              `Request failed: ${error.response.data?.Errors[0].ErrorMessage}`
-            )
-          })
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setGameStart(true);
-      }
+      inputPlaceholder: 'Enter your Username',
+      input: 'text'
+      
     })
+    
+    if (username) {
+
+      Swal.fire({
+        title: 'Identify shortest path',
+        input: 'password',
+        inputAttributes: {
+          autocapitalize: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Start',
+        showLoaderOnConfirm: true,
+        inputPlaceholder: "Enter your Password",
+  
+  
+        preConfirm: (password) => {
+          return   axios.post(`Game/register/user`, {
+            "userName": username,
+            "password": password
+           })
+            .then(response => {
+              console.log(response)
+              setUserName(username);
+              setuserDetail(response.data);
+              return response
+            })
+            .catch(error => {
+              console.log(error)
+              Swal.showValidationMessage(
+                `Request failed: ${error.response.data?.Errors[0].ErrorMessage}`
+              )
+            })
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setGameStart(true);
+        }
+      })
+      
+    }
+
+    
+
+
+  
 
 
 
