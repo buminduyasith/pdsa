@@ -9,6 +9,8 @@ namespace PDSACW.Application.Common.Interfaces
 
         DbSet<ShortestPathGame> ShortestPathGame { get; }
 
+        DbSet<EightQueens> EightQueens { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

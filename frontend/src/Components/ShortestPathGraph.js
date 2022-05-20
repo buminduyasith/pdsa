@@ -215,10 +215,10 @@ function ShortestPathGraph() {
   
     var shortestPath = solve(graph, start, finish);
 
-
+    console.log("shortestPath");
     console.log(shortestPath);
-    console.log("console.log(formFields);");
-    console.log(formFields);
+    console.log("shortestPath");
+    console.log(JSON.stringify(shortestPath));
     nodes.forEach(element => {
       var answerOfShortestPath =  shortestPath.results[element]
       var userinput = formFields.filter(item=> item.startNode===start && item.endNode === element);
@@ -230,16 +230,16 @@ function ShortestPathGraph() {
         result = true;
       }
       else{
-        result = false;
+        result = true;
       }
       
    
       if(result){
         Swal.fire({
           icon: 'success',
-          title: 'Your work has been saved',
-          showConfirmButton: false,
-          timer: 1500
+          title: 'Good job! Your answer is correct',
+          showConfirmButton: true,
+          confirmButtonText:"Next Round"
         })
       }
       else{
