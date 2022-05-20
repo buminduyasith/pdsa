@@ -54,10 +54,28 @@ class Status extends Component {
                 console.log(error);
             })
 
-            
             if(noOFRecords === 12){
                 alert('All Soulutions have been found please Restart');
             } else {
+                
+                let exixtingSolution = false;
+
+                axios.get('https://localhost:7218/api/EightQueens/EightQueens')
+                .then(res => {
+                    res.data.solution.forEach(element => {
+                        if (deepEqual(this.state.crrposition,element) == true){
+                            exixtingSolution = true;
+                        }else{
+                            exixtingSolution = false;
+                            alert('Soulution already exists. Please Try Again');
+                        }
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                })
+
+                if(exixtingSolution === false) {
                 const userSolution = {
                     name: this.state.value,
                     solution: this.state.crrposition
@@ -69,6 +87,9 @@ class Status extends Component {
                         alert('An Error Ocurred please Try Again later!');
                     });
                 this.setState({ name: '', crrposition: '' })
+                }else{
+                    alert('An Error Ocurred please Try Again later!');
+                }
             }
         }
 
