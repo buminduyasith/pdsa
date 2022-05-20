@@ -5,9 +5,21 @@ import Chessboard from 'chessboardjsx';
 import queenUnderAttackSvg from './shield.svg';
 import React, { Component } from 'react';
 import Status from './Status.js';
-import Title from './Title.js';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
 const gameName    = 'Eight Queens';
+
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
 
 class EightQueens extends Component {
     /**
@@ -50,9 +62,9 @@ class EightQueens extends Component {
 
         Object.keys(position).forEach(function(square) { // For each queen on board
            if (attacked.includes(square) && square !== 'bQ') {   // if Queen is under attack
-               position[square] = 'bQ';                          // Flip Queen under attack
+               position[square] = 'bQ';
            } else if (square !== 'wQ') { // If Queen is no longer under attack
-               position[square] = 'wQ'; // Queen at peace
+               position[square] = 'wQ';
            }
         });
 
@@ -113,17 +125,27 @@ class EightQueens extends Component {
         }
 
         return (
-            <div className="EightQueens">
-                <div className="EightQueens-header">
-                    <Title
-                        gameName={gameName}
-                    />
+            <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={1}>
+                <Grid item xs={4}>
+                <Item>
                     <Status
                         queensOnBoard={this.state.queensOnBoard}
                         queensUnderAttack={this.state.queensUnderAttack}
                         position={this.state.position}
+                        gameName={gameName}
                     />
+                <div className="EightQueens-instructions" style={{"paddingBottom" : "50px"}}>
+                    - Place <b>Eight Queens</b> Without paths being crossed!
+                    <br />
+                    - Click a square to place a Queen. Click a Queen to remove it.
                 </div>
+                    <Button variant="contained"  onClick={this.toggleAttackPaths} style={{"marginRight" : "15px"}}> {showAttackPathsText} attack paths</Button>
+                    <Button variant="contained"  onClick={this.toggleAttackPaths} > <a href="./eight_queens" >Restart</a></Button>
+                </Item>
+                </Grid>
+                <Grid item xs={8}>
+                <Item>
                 <Chessboard
                     id="EightQueens"
                     position={fenPosition}
@@ -131,7 +153,7 @@ class EightQueens extends Component {
                     sparePieces={false}
                     draggable={false}
                     showNotation={true}
-                    calcWidth={({screenWidth}) => (screenWidth < 500 ? 350 : 600)}
+                    calcWidth={({screenWidth}) => (screenWidth < 500 ? 350 : 725)}
                     onSquareClick={this.onSquareClick}
                     squareStyles={squareStyles}
                     pieces={{
@@ -147,23 +169,10 @@ class EightQueens extends Component {
                         )
                     }}
                 />
-                <div className="EightQueens-instructions">
-                    - Place <b>Eight Queens</b> Without paths being crossed!
-                    <br />
-                    - Click a square to place a Queen. Click a Queen to remove it.
-                </div>
-                <div className="EightQueens-header">
-                    <button
-                        className="EightQueens-paths"
-                        onClick={this.toggleAttackPaths}
-                    >
-                        {showAttackPathsText} attack paths
-                    </button>
-                    <button className="EightQueens-restart">
-                        <a href="./eight_queens" >Restart</a>
-                    </button>
-                </div>
-            </div>
+                </Item>
+                </Grid>
+            </Grid>
+            </Box> 
         );
     }
 }

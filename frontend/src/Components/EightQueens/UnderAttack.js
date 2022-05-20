@@ -121,7 +121,7 @@ export function numberToAlpha(number) {
         case 6: return 'f';
         case 7: return 'g';
         case 8: return 'h';
-        default: return ''; // ERROR
+        default: return '';
     }
 }
 
