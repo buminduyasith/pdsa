@@ -44,7 +44,7 @@ class EightQueens extends Component {
             position[[square]] = 'wQ'; // Clicked on an empty square, add a Queen
         }
 
-        console.log(position);
+        // console.log(position);
 
         const attacked = attack.underAttack(position); // get array of Queens under attack
 
@@ -121,6 +121,7 @@ class EightQueens extends Component {
                     <Status
                         queensOnBoard={this.state.queensOnBoard}
                         queensUnderAttack={this.state.queensUnderAttack}
+                        position={this.state.position}
                     />
                 </div>
                 <Chessboard
