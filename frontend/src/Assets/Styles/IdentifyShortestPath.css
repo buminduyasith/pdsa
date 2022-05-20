@@ -82,3 +82,11 @@
 	background: #c0392b;
 	color: #ffffff;
   }
+
+
+  .register{
+	display: flex;
+    justify-content: center;
+    gap: 20px;
+
+  }
