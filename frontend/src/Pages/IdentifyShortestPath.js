@@ -42,7 +42,7 @@ function IdentifyShortestPath() {
   
   
         preConfirm: (password) => {
-          return   axios.post(`Game/register/user`, {
+          return   axios.post(`Game/signin`, {
             "userName": username,
             "password": password
            })
@@ -103,7 +103,7 @@ function IdentifyShortestPath() {
 
       {isGameStart &&
         <div>
-          <h4> The user <b>{userName && userName}</b> is logged in.</h4>
+          <h4><b>{userName && userName}</b> is logged in.</h4>
           <div>
             <h4>Round {roundCount}</h4>
           </div>

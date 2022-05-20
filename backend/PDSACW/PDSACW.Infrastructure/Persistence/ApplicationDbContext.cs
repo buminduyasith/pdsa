@@ -19,6 +19,8 @@ namespace PDSACW.Infrastructure.Persistence
 
         public DbSet<ShortestPathGame> ShortestPathGame { get; set; }
 
+        public DbSet<EightQueens> EightQueens { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
      

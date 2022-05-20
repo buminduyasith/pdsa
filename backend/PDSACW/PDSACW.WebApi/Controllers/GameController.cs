@@ -20,7 +20,7 @@ namespace PDSACW.WebApi.Controllers
 
         }
 
-        [HttpPost("signupin", Name = "UserLogin")]
+        [HttpPost("signin", Name = "UserLogin")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<OkObjectResult> Login([FromBody] SigninUserQuery  query)
