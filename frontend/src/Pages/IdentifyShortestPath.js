@@ -6,7 +6,7 @@ import shortestPathimage from "../Assets/Images/shortestPathCover.gif";
 import axios from 'axios'
 function IdentifyShortestPath() {
 
-  const [isGameStart, setGameStart] = useState(true)
+  const [isGameStart, setGameStart] = useState(false)
   const [userName, setUserName] = useState("")
   const [roundCount, setRoundCount] = useState(1)
   const [userDetail, setuserDetail] = useState({})
@@ -21,7 +21,7 @@ function IdentifyShortestPath() {
     var userGameName = "";
 
     const { value: username } = await Swal.fire({
-      title: 'Identify shortest path',
+      title: 'Identify shortest path - Sign in',
       inputPlaceholder: 'Enter your Username',
       input: 'text'
       
@@ -30,7 +30,7 @@ function IdentifyShortestPath() {
     if (username) {
 
       Swal.fire({
-        title: 'Identify shortest path',
+        title: 'Identify shortest - Sign in',
         input: 'password',
         inputAttributes: {
           autocapitalize: 'off'
@@ -68,22 +68,61 @@ function IdentifyShortestPath() {
       
     }
 
-    
-
-
-  
-
-
-
-
-
-    // Swal.fire({
-    //   title: 'Error!',
-    //   text: 'Do you want to continue',
-    //   icon: 'error',
-    //   confirmButtonText: 'Cool'
-    // })
   }
+
+  const RegisterAndStatGame = async () => {
+
+    var userGameName = "";
+
+    const { value: username } = await Swal.fire({
+      title: 'Identify shortest path - Sign up',
+      inputPlaceholder: 'Enter your Username',
+      input: 'text'
+      
+    })
+    
+    if (username) {
+
+      Swal.fire({
+        title: 'Identify shortest path - Sign up',
+        input: 'password',
+        inputAttributes: {
+          autocapitalize: 'off'
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Start',
+        showLoaderOnConfirm: true,
+        inputPlaceholder: "Enter your Password",
+  
+  
+        preConfirm: (password) => {
+          return   axios.post(`Game/signup`, {
+            "userName": username,
+            "password": password
+           })
+            .then(response => {
+              console.log(response)
+              setUserName(username);
+              setuserDetail(response.data);
+              return response
+            })
+            .catch(error => {
+              console.log(error)
+              Swal.showValidationMessage(
+                `Request failed: ${error.response.data?.Errors[0].ErrorMessage}`
+              )
+            })
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setGameStart(true);
+        }
+      })
+      
+    }
+  }
+
 
   return (
     <div className="App">
@@ -95,7 +134,10 @@ function IdentifyShortestPath() {
           <div>
             <img src={shortestPathimage} />
           </div>
-          <button className="btn btn-primary btn-round-2" onClick={startGame}>Start Game</button>
+         <div className='register'>
+         <button className="btn btn-primary btn-round-2" onClick={RegisterAndStatGame}>Sign up</button>
+         <button className="btn btn-primary btn-round-2" onClick={startGame}>Sign in</button>
+           </div>
         </div>
       }
 
