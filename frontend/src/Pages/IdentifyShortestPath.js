@@ -3,6 +3,7 @@ import ShortestPathGraph from '../Components/ShortestPathGraph';
 import Swal from 'sweetalert2'
 import '../Assets/Styles/IdentifyShortestPath.css';
 import shortestPathimage from "../Assets/Images/shortestPathCover.gif";
+import axios from 'axios'
 function IdentifyShortestPath() {
 
   const [isGameStart, setGameStart] = useState(false)
@@ -29,18 +30,18 @@ function IdentifyShortestPath() {
       showLoaderOnConfirm: true,
       inputPlaceholder: "Please Enter Your Name",
 
-      preConfirm: (name) => {
-        return fetch(`//api.github.com/users/${name}`)
+
+      preConfirm: (userName) => {
+        return   axios.post(`Game/register/user`, { userName })
           .then(response => {
-            if (!response.ok) {
-              throw new Error(response.statusText)
-            }
-            setUserName(name);
-            return response.json()
+            console.log(response)
+            setUserName(userName);
+            return response
           })
           .catch(error => {
+            console.log(error)
             Swal.showValidationMessage(
-              `Request failed: ${error}`
+              `Request failed: ${error.response.data?.Errors[0].ErrorMessage}`
             )
           })
       },
