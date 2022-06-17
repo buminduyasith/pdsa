@@ -15,8 +15,8 @@ namespace PDSACW.Application.Features.Common.Query
 
             RuleFor(v => v.UserName)
                 .NotEmpty().WithMessage("UserName is required.")
-                .MaximumLength(200).WithMessage("UserName must not exceed 200 characters.")
-                .MustAsync(BeUniqueUserName).WithMessage("username is not available. please sign up");
+                .MaximumLength(200).WithMessage("UserName must not exceed 200 characters.");
+                //.MustAsync(BeUniqueUserName).WithMessage("username is not available. please sign up");
 
             RuleFor(v => v.Password)
                .NotEmpty().WithMessage("Password is required.")

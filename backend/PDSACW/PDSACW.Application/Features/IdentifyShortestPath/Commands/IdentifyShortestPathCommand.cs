@@ -6,13 +6,13 @@ using PDSACW.Application.Common.Interfaces;
 using PDSACW.Application.DTO;
 using PDSACW.Application.Services;
 using PDSACW.Application.ViewModels;
+using PDSACW.Domain.Entities;
 
 namespace PDSACW.Application.Features.IdentifyShortestPath.Commands
 {
     public class IdentifyShortestPathCommand : IRequest<bool>
     {
-        public int sourceVertex { get; set; }
-        public List<IdentifyShortestPathGraphData> graphData { get; set; }
+        public int UserId { get; set; }
         public List<IdentifyShortestPathAnswer> answer { get; set; }
     }
 
@@ -30,26 +30,18 @@ namespace PDSACW.Application.Features.IdentifyShortestPath.Commands
             _mapper = mapper;
         }
 
-        public Task<bool> Handle(IdentifyShortestPathCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(IdentifyShortestPathCommand request, CancellationToken cancellationToken)
         {
-            Graph graph = new Graph(vertices);
-            int sourceVertex = request.sourceVertex;
-
-            request.graphData.ForEach(el =>
+            foreach (var el in request.answer)
             {
-                graph.addEdge(el.StartNode, el.EndNode, el.Weight);
-            });
+                var shortestPathGame = new ShortestPathGame { ShortestPath = el.ShortestPath, Distance = el.Distance.ToString(), StartNode = el.StartNode, UserId = request.UserId };
+                _context.ShortestPathGame.Add(shortestPathGame);
 
-            var answer = graph.dijkstra_GetMinDistances(sourceVertex);
-
-            for (int i = 0; i < vertices; i++)
-            {
-                _logger.LogInformation($"{request.answer[i].Distance}  --  {answer[i].distance} ");
-                request.answer[i].Distance = answer[i].distance;
+              
             }
+            await _context.SaveChangesAsync(cancellationToken);
 
-            return Task.FromResult(true);
-
+            return true;
 
         }
     }

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2'
 import '../Assets/Styles/ShortestPathGraph.css';
@@ -19,10 +20,9 @@ function ShortestPathGraph() {
   const [runagain, setRunagain] = useState(false);
 
   var nodes = "A B F E D C".split(" ");
-  
+
 
   useEffect(() => {
-    console.log("hi from useEffect")
     const canvas = canvasRef.current;
     canvas.width = "500" //window.innerWidth * 2;
     canvas.height = "320" //window.innerHeight * 2;
@@ -40,7 +40,7 @@ function ShortestPathGraph() {
 
 
 
-    const tempStartNode = "B" //nodes[Math.floor((Math.random() * nodes.length))]
+    const tempStartNode = nodes[Math.floor((Math.random() * nodes.length))]
     setStartNode(tempStartNode)
 
     const allinputsData = [
@@ -60,28 +60,28 @@ function ShortestPathGraph() {
       return value != tempStartNode;
     }));
 
-    // var basicGraph = [
-    //   { start: "A", finish: "B", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-    //   { start: "A", finish: "C", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-    //   { start: "B", finish: "F", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-    //   { start: "B", finish: "D", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-    //   { start: "C", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-    //   { start: "F", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-    //   { start: "D", finish: "F", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
-    //   { start: "D", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) }
+    var basicGraph = [
+      { start: "A", finish: "B", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+      { start: "A", finish: "C", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+      { start: "B", finish: "F", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+      { start: "B", finish: "D", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+      { start: "C", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+      { start: "F", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+      { start: "D", finish: "F", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) },
+      { start: "D", finish: "E", distance: randomIntFromInterval(MIN_DISTANCE, MAX_DISTANCE) }
+    ];
+
+    //   var basicGraph = [
+    //     { start: "A", finish: "B", distance: 10 },
+    //     { start: "A", finish: "C", distance: 15 },
+    //     { start: "B", finish: "F", distance: 15 },
+    //     { start: "B", finish: "D", distance: 12 },
+    //     { start: "C", finish: "E", distance: 10 },
+    //     { start: "F", finish: "E", distance: 5 },
+    //     { start: "D", finish: "F", distance: 1 },
+    //     { start: "D", finish: "E", distance: 2 }
     // ];
 
-    var basicGraph = [
-      { start: "A", finish: "B", distance: 10 },
-      { start: "A", finish: "C", distance: 15 },
-      { start: "B", finish: "F", distance: 15 },
-      { start: "B", finish: "D", distance: 12 },
-      { start: "C", finish: "E", distance: 10 },
-      { start: "F", finish: "E", distance: 5 },
-      { start: "D", finish: "F", distance: 1 },
-      { start: "D", finish: "E", distance: 2 }
-  ];
-  
 
     setGraphData(basicGraph)
 
@@ -208,59 +208,107 @@ function ShortestPathGraph() {
   const submit = (e) => {
     e.preventDefault();
 
-    var result = false;
-    var graph = readyGraph(graphData);
-    var start ="B" //startNode;
-    var finish = "E";
-  
-    var shortestPath = solve(graph, start, finish);
+    Swal.fire({
+      title: 'Uploading...',
+      html: 'Please wait...',
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading()
+      }
+    });
 
-    console.log("shortestPath");
+    var result = true;
+    var graph = readyGraph(graphData);
+    var start = startNode;
+    var finish = "E";
+
+    var shortestPath = solve(graph, start, finish);
+    var tempshortestPath = shortestPath
+    console.log("te,p",tempshortestPath)
+
     console.log(shortestPath);
     console.log("shortestPath");
     console.log(JSON.stringify(shortestPath));
+
     nodes.forEach(element => {
-      var answerOfShortestPath =  shortestPath.results[element]
-      var userinput = formFields.filter(item=> item.startNode===start && item.endNode === element);
+      var answerOfShortestPath = shortestPath.results[element]
+      var userinput = formFields.filter(item => item.startNode === start && item.endNode === element);
       var userinputSPath = userinput[0]?.shortestPath
 
       //console.log(JSON.stringify(userinputSPath))
-     // console.log(JSON.stringify(answerOfShortestPath))
-      if(JSON.stringify(answerOfShortestPath) === JSON.stringify(userinputSPath.split(","))){
-        result = true;
+      // console.log(JSON.stringify(answerOfShortestPath))
+      if (JSON.stringify(answerOfShortestPath) === JSON.stringify(userinputSPath.split(","))) {
+       // result = true;
       }
-      else{
-        result = true;
+      else {
+        //result = true;
       }
-      
-   
-      if(result){
-        Swal.fire({
-          icon: 'success',
-          title: 'Good job! Your answer is correct',
-          showConfirmButton: true,
-          confirmButtonText:"Next Round"
-        })
-      }
-      else{
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'The answer is not correct',
-          showCancelButton: true,
-          confirmButtonText: 'Try again',
-        }).then((result) => {
-          /* Read more about isConfirmed, isDenied below */
-          if (result.isConfirmed) {
-            setRunagain(runagain == true ? false : true);
-          } else if (result.isDenied) {
-            Swal.fire('Changes are not saved', '', 'info')
-          }
-        })
+    });
 
+    var shortPathList = [];
+    var tempnodes = "A B C D E F".split(" ");
+    tempnodes.forEach(element => {
+      console.log("1")
+      console.log(element);
+      //debugger
+      var dis = tempshortestPath.results[element].dist
+      delete tempshortestPath.results[element].dist;
+      var arr = tempshortestPath.results[element]
+      if (arr.length > 0) {
+        shortPathList.push({
+          distance: randomIntFromInterval(10, 25),
+          shortestPath: arr.toString(),
+          startNode: start
+        })
       }
 
     });
+    if (result) {
+      axios.post(`ShortestPath/shortestpath`, {
+        "userId": 7,
+        "answer": shortPathList
+       })
+        .then(response => {
+          Swal.close()
+          Swal.hideLoading()
+          Swal.fire({
+                 icon: 'success',
+                title: 'Good job! Your answer is correct',
+                showConfirmButton: true,
+                confirmButtonText: "Next Round"
+              })
+          console.log(response)
+        })
+        .catch(error => {
+          Swal.close()
+          Swal.hideLoading()
+          console.log(error)
+         
+        })
+    }
+    else {
+      Swal.close()
+      Swal.hideLoading()
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'The answer is not correct',
+        showCancelButton: true,
+        confirmButtonText: 'Try again',
+        onBeforeOpen () {
+          Swal.hideLoading ()
+        },
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          setRunagain(runagain == true ? false : true);
+        } else if (result.isDenied) {
+          Swal.fire('Changes are not saved', '', 'info')
+        }
+      })
+
+    }
   }
 
   const startDrawing = ({ nativeEvent }) => {
@@ -347,33 +395,33 @@ function ShortestPathGraph() {
     var graph = readyGraph(graphData);
     var start = "B" //startNode;
     var finish = "E";
-   // console.log("start", start, "fi", finish)
+    // console.log("start", start, "fi", finish)
     var shortestPath = solve(graph, start, finish);
-   // console.log(shortestPath);
+    // console.log(shortestPath);
 
     const ans = [{ "startNode": "B", "endNode": "A", "shortestPath": "A,V", "distance": "10", "disabled": false }, { "startNode": "B", "endNode": "B", "shortestPath": "-", "distance": 0, "disabled": true }, { "startNode": "B", "endNode": "C", "shortestPath": "F,E,C", "distance": "20", "disabled": false }, { "startNode": "B", "endNode": "D", "shortestPath": "A,K", "distance": "30", "disabled": false }, { "startNode": "B", "endNode": "E", "shortestPath": "", "distance": 0, "disabled": false }, { "startNode": "B", "endNode": "F", "shortestPath": "", "distance": 0, "disabled": false }]
-  //  console.log(ans)
-  //  console.log(shortestPath.results);
-  console.log(JSON.stringify(shortestPath))
+    //  console.log(ans)
+    //  console.log(shortestPath.results);
+    console.log(JSON.stringify(shortestPath))
     console.log("------");
     nodes.forEach(element => {
       console.log(JSON.stringify(shortestPath))
-      var answerOfShortestPath =  shortestPath.results[element]
-      var userinput = ans.filter(item=> item.startNode==="B" && item.endNode === element);
+      var answerOfShortestPath = shortestPath.results[element]
+      var userinput = ans.filter(item => item.startNode === "B" && item.endNode === element);
       var userinputSPath = userinput[0].shortestPath
 
       var answerOfShortestPathToArray = JSON.stringify(answerOfShortestPath)
-     // console.log(answerOfShortestPathToArray,userinputSPath.split(","))
-      if(JSON.stringify(answerOfShortestPathToArray) === JSON.stringify(userinputSPath.split(","))){
-       
+      // console.log(answerOfShortestPathToArray,userinputSPath.split(","))
+      if (JSON.stringify(answerOfShortestPathToArray) === JSON.stringify(userinputSPath.split(","))) {
+
       }
 
     });
 
 
 
-   
-    
+
+
   }
 
   function randomIntFromInterval(min, max) { // min and max included 

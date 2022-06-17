@@ -9,7 +9,6 @@ namespace PDSACW.Domain.Entities
     public class ShortestPathGame : EntityBase
     {
         public string StartNode { get; set; }
-        public string EndNode { get; set; }
         public string Distance { get; set; }
         public string ShortestPath { get; set; }
         public int UserId { get; set; }

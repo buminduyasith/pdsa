@@ -8,8 +8,8 @@ namespace PDSACW.Application.DTO
 {
     public class IdentifyShortestPathAnswer
     {
-        public int StartNode { get; set; }
-        public int EndNode { get; set; }
+        public string StartNode { get; set; }
+        public string ShortestPath { get; set; }
         public int Distance { get; set; }
     }
 }
