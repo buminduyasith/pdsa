@@ -13,6 +13,7 @@ namespace PDSACW.Application.Features.IdentifyShortestPath.Commands
     public class IdentifyShortestPathCommand : IRequest<bool>
     {
         public int UserId { get; set; }
+        public int GameRound { get; set; }
         public List<IdentifyShortestPathAnswer> answer { get; set; }
     }
 
@@ -34,10 +35,10 @@ namespace PDSACW.Application.Features.IdentifyShortestPath.Commands
         {
             foreach (var el in request.answer)
             {
-                var shortestPathGame = new ShortestPathGame { ShortestPath = el.ShortestPath, Distance = el.Distance.ToString(), StartNode = el.StartNode, UserId = request.UserId };
+                var shortestPathGame = new ShortestPathGame { ShortestPath = el.ShortestPath,
+                    Distance = el.Distance.ToString(), StartNode = el.StartNode, UserId = request.UserId, GameRound = request.GameRound };
                 _context.ShortestPathGame.Add(shortestPathGame);
 
-              
             }
             await _context.SaveChangesAsync(cancellationToken);
 

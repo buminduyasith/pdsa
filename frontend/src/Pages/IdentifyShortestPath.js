@@ -123,6 +123,14 @@ function IdentifyShortestPath() {
     }
   }
 
+  const setRoundCountHandler = () =>{
+    setRoundCount(roundCount + 1)
+  }
+
+  const getRoundCountHandler = () =>{
+    console.log(roundCount)
+    return roundCount;
+  }
 
   return (
     <div className="App">
@@ -151,7 +159,7 @@ function IdentifyShortestPath() {
           </div>
 
           <div>
-          <ShortestPathGraph />
+          <ShortestPathGraph resetHandler = {setRoundCountHandler} getGameRound = {getRoundCountHandler} />
           </div>
         
 

@@ -12,6 +12,7 @@ namespace PDSACW.Domain.Entities
         public string Distance { get; set; }
         public string ShortestPath { get; set; }
         public int UserId { get; set; }
+        public int? GameRound { get; set; }
         public User User { get; set; }
     }
 }

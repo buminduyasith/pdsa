@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import axios from 'axios'
 
 
-axios.defaults.baseURL = "http://localhost:5000/api/"
+axios.defaults.baseURL = "https://localhost:7218/api/"
 
 // axios.interceptors.request.use((req)=>{
 //   console.log(req);
