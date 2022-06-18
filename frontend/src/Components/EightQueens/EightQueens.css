@@ -1,0 +1,26 @@
+.EightQueens {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.EightQueens-header {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 0 0 5px 0;
+}
+
+.EightQueens-instructions {
+  font-size: 90%;
+}
+
+.EightQueens-paths {
+  color: #373737;
+  font-size: 12px;
+  margin: 8px 15px 0 0;
+  padding: 4px;
+}
+
