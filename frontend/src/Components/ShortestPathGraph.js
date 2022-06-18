@@ -6,7 +6,7 @@ const MIN_DISTANCE = 5;
 const MAX_DISTANCE = 50;
 
 
-function ShortestPathGraph() {
+function ShortestPathGraph(props) {
   const canvasRef = useRef(null);
   const contextRef = useRef(null);
   const [isDrawing, setIsDrawing] = useState(false)
@@ -84,7 +84,7 @@ function ShortestPathGraph() {
 
 
     setGraphData(basicGraph)
-
+    
     //#region create circles with text
     contextRef.current.beginPath();
     for (var i = 0; i < coords.length; i++) {
@@ -198,7 +198,6 @@ function ShortestPathGraph() {
   }, [runagain])
 
   const handleFormChange = (e, i) => {
-    console.log("form submitted", i);
     var data = [...formFields]
     data[i][e.target.name] = e.target.value.toUpperCase();
     setFormFields(data)
@@ -208,66 +207,71 @@ function ShortestPathGraph() {
   const submit = (e) => {
     e.preventDefault();
 
-    Swal.fire({
-      title: 'Uploading...',
-      html: 'Please wait...',
-      allowEscapeKey: false,
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading()
-      }
-    });
+    var isEmptyInputExsist = formFields.filter(x => x.shortestPath == "");
+    debugger
+    if(isEmptyInputExsist.length != 0){
+        Swal.fire({
+          icon: 'error',
+          title: 'Validation failed',
+          text: 'please complete the form',
+        })
 
-    var result = true;
+        return;
+    }
     var graph = readyGraph(graphData);
+
+    console.log(graph);
+
+    console.log(JSON.stringify(graph))
+    
     var start = startNode;
-    var finish = "E";
+    var finish = "F";
 
-    var shortestPath = solve(graph, start, finish);
+    var shortestPath = findShortestPath(graph, start, finish);
     var tempshortestPath = shortestPath
-    console.log("te,p",tempshortestPath)
-
+    debugger
     console.log(shortestPath);
     console.log("shortestPath");
-    console.log(JSON.stringify(shortestPath));
+    
+    console.log(JSON.stringify(shortestPath.results));
 
-    nodes.forEach(element => {
-      var answerOfShortestPath = shortestPath.results[element]
-      var userinput = formFields.filter(item => item.startNode === start && item.endNode === element);
-      var userinputSPath = userinput[0]?.shortestPath
-
-      //console.log(JSON.stringify(userinputSPath))
-      // console.log(JSON.stringify(answerOfShortestPath))
-      if (JSON.stringify(answerOfShortestPath) === JSON.stringify(userinputSPath.split(","))) {
-       // result = true;
-      }
-      else {
-        //result = true;
-      }
-    });
-
+    var result = checkValidAnswer(nodes, shortestPath, formFields, start)
+    
     var shortPathList = [];
     var tempnodes = "A B C D E F".split(" ");
     tempnodes.forEach(element => {
-      console.log("1")
-      console.log(element);
       //debugger
       var dis = tempshortestPath.results[element].dist
+      debugger
       delete tempshortestPath.results[element].dist;
       var arr = tempshortestPath.results[element]
       if (arr.length > 0) {
         shortPathList.push({
-          distance: randomIntFromInterval(10, 25),
+          distance: dis,
           shortestPath: arr.toString(),
           startNode: start
         })
       }
 
     });
+
+    //result = true;
+    
     if (result) {
+      Swal.fire({
+        title: 'Uploading...',
+        html: 'Please wait...',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading()
+        }
+      });
+  
       axios.post(`ShortestPath/shortestpath`, {
         "userId": 7,
-        "answer": shortPathList
+        "answer": shortPathList,
+        "gameRound": props.getGameRound()
        })
         .then(response => {
           Swal.close()
@@ -277,6 +281,14 @@ function ShortestPathGraph() {
                 title: 'Good job! Your answer is correct',
                 showConfirmButton: true,
                 confirmButtonText: "Next Round"
+              }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                  setRunagain(runagain == true ? false : true);
+                  props.resetHandler();
+                } else if (result.isDenied) {
+                  Swal.fire('Changes are not saved', '', 'info')
+                }
               })
           console.log(response)
         })
@@ -311,6 +323,31 @@ function ShortestPathGraph() {
     }
   }
 
+
+  const checkValidAnswer = (nodes, shortestPath, formFields, start)=>{
+
+    var result = true;
+    nodes.every(element => {
+      var answerOfShortestPath = shortestPath.results[element]
+      var userinput = formFields.filter(item => item.startNode === start && item.endNode === element);
+      var userinputSPath = userinput[0]?.shortestPath
+      var answerToStringify = JSON.stringify(answerOfShortestPath)
+      var userinputSPathToStringify = JSON.stringify(userinputSPath.split(","))
+    
+      if(start == element){
+
+      }
+      else if (answerToStringify != userinputSPathToStringify) {
+        result = false;
+        return false;
+      }
+
+    });
+    
+    return result;
+
+  }
+
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
     console.log(offsetX, offsetY)
@@ -331,7 +368,7 @@ function ShortestPathGraph() {
     contextRef.current.stroke();
   }
 
-  function solve(graph, s, f) {
+  function findShortestPath(graph, s, f) {
     // debugger;
     var solutions = {};
     solutions[s] = [];
@@ -396,7 +433,7 @@ function ShortestPathGraph() {
     var start = "B" //startNode;
     var finish = "E";
     // console.log("start", start, "fi", finish)
-    var shortestPath = solve(graph, start, finish);
+    var shortestPath = findShortestPath(graph, start, finish);
     // console.log(shortestPath);
 
     const ans = [{ "startNode": "B", "endNode": "A", "shortestPath": "A,V", "distance": "10", "disabled": false }, { "startNode": "B", "endNode": "B", "shortestPath": "-", "distance": 0, "disabled": true }, { "startNode": "B", "endNode": "C", "shortestPath": "F,E,C", "distance": "20", "disabled": false }, { "startNode": "B", "endNode": "D", "shortestPath": "A,K", "distance": "30", "disabled": false }, { "startNode": "B", "endNode": "E", "shortestPath": "", "distance": 0, "disabled": false }, { "startNode": "B", "endNode": "F", "shortestPath": "", "distance": 0, "disabled": false }]
@@ -422,6 +459,15 @@ function ShortestPathGraph() {
 
 
 
+  }
+
+  const PrintAnswer = ()=>{
+
+    var graph = readyGraph(graphData);
+    var start = startNode;
+    var finish = "F";
+    var shortestPath = findShortestPath(graph, start, finish);
+    console.log(shortestPath);
   }
 
   function randomIntFromInterval(min, max) { // min and max included 
@@ -472,11 +518,13 @@ function ShortestPathGraph() {
             )
           })}
           <button type='submit' className="btn btn-primary btn-round-2">Submit</button>
+         
         </form>
+      
       </div>
 
 
-
+      <button className="btn btn-primary btn-round-2 mt-2" onClick={PrintAnswer}>Answer</button>
     </div>
   );
 }
